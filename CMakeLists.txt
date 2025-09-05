@@ -52,6 +52,8 @@ target_include_directories(luasec
         ${LUA_INCLUDE_DIR}
 )
 
+message(STATUS "LuaSocket include dir: ${LUASOCKET_INCLUDE_DIR}")
+
 target_compile_definitions(luasec PRIVATE
     WITH_LUASOCKET
     LUASOCKET_DEBUG
