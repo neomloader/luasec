@@ -33,10 +33,10 @@ set(LUASEC_SOURCES
     src/x509.c
     src/context.c
     src/ssl.c
-    src/luasocket/buffer.c
-    src/luasocket/io.c
-    src/luasocket/timeout.c
-    src/luasocket/usocket.c
+    # src/luasocket/buffer.c
+    # src/luasocket/io.c
+    # src/luasocket/timeout.c
+    # src/luasocket/usocket.c
 )
 
 add_library(luasec STATIC ${LUASEC_SOURCES})
