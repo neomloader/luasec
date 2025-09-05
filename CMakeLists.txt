@@ -48,6 +48,7 @@ target_include_directories(luasec
         ${CMAKE_CURRENT_SOURCE_DIR}/
         ${CMAKE_CURRENT_SOURCE_DIR}/src/luasocket
         ${OPENSSL_INCLUDE_DIR}
+        ${LUASOCKET_INCLUDE_DIR}
         ${LUA_INCLUDE_DIR}
 )
 
