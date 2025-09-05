@@ -4,21 +4,27 @@ project(LuaSec LANGUAGES C)
 
 set(OPENSSL_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/prebuilt-ssl/arm64-v8a CACHE PATH "Путь к prebuilt OpenSSL для ARM64-v8A")
 
-find_library(OPENSSL_SSL_LIBRARY NAMES ssl libssl.a HINTS ${OPENSSL_ROOT_DIR}/lib)
-find_library(OPENSSL_CRYPTO_LIBRARY NAMES crypto libcrypto.a HINTS ${OPENSSL_ROOT_DIR}/lib)
-find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h HINTS ${OPENSSL_ROOT_DIR}/include)
+set(OPENSSL_INCLUDE_DIR ${OPENSSL_ROOT_DIR}/include)
+set(OPENSSL_SSL_LIBRARY ${OPENSSL_ROOT_DIR}/lib/libssl.a)
+set(OPENSSL_CRYPTO_LIBRARY ${OPENSSL_ROOT_DIR}/lib/libcrypto.a)
 
-if(NOT OPENSSL_INCLUDE_DIR OR NOT OPENSSL_SSL_LIBRARY OR NOT OPENSSL_CRYPTO_LIBRARY)
-    message(FATAL_ERROR "Не удалось найти OpenSSL в ${OPENSSL_ROOT_DIR}. Проверьте путь.")
+if(NOT EXISTS ${OPENSSL_INCLUDE_DIR}/openssl/ssl.h)
+    message(FATAL_ERROR "Не найден заголовочный файл OpenSSL: ${OPENSSL_INCLUDE_DIR}/openssl/ssl.h")
 endif()
 
-message(STATUS "Найдены заголовки OpenSSL: ${OPENSSL_INCLUDE_DIR}")
-message(STATUS "Найдена библиотека OpenSSL SSL: ${OPENSSL_SSL_LIBRARY}")
-message(STATUS "Найдена библиотека OpenSSL Crypto: ${OPENSSL_CRYPTO_LIBRARY}")
+if(NOT EXISTS ${OPENSSL_SSL_LIBRARY})
+    message(FATAL_ERROR "Не найдена библиотека SSL: ${OPENSSL_SSL_LIBRARY}")
+endif()
 
+if(NOT EXISTS ${OPENSSL_CRYPTO_LIBRARY})
+    message(FATAL_ERROR "Не найдена библиотека Crypto: ${OPENSSL_CRYPTO_LIBRARY}")
+endif()
+
+message(STATUS "Используются заголовки OpenSSL: ${OPENSSL_INCLUDE_DIR}")
+message(STATUS "Используется библиотека OpenSSL SSL: ${OPENSSL_SSL_LIBRARY}")
+message(STATUS "Используется библиотека OpenSSL Crypto: ${OPENSSL_CRYPTO_LIBRARY}")
 
 set(LUA_INCLUDE_DIR ${LUAJIT_INCLUDE_DIR} CACHE PATH "Путь к заголовочным файлам Lua")
-
 
 set(LUASEC_SOURCES
     src/options.c
@@ -34,7 +40,6 @@ set(LUASEC_SOURCES
 )
 
 add_library(luasec STATIC ${LUASEC_SOURCES})
-
 
 target_include_directories(luasec
     PUBLIC
